@@ -119,7 +119,7 @@ def main():
         sample_set=list(set(sample_list))
         sample_set.sort()
         
-        am.add_record(sample_list)
+        am.add_record(sample_set)
         am.write_mmi()
 
 
