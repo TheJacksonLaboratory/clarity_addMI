@@ -79,7 +79,7 @@ class assignMI(RecordWriter):
     def read_mi(self):
         fname = open(self.mi_file_path, "r")   # with caused issues with lock
         mi_file = load(fname.read(), Loader=Loader)
-        self.mi_number = (mi_file['mi_number'])
+        self.mi_number = int(mi_file['mi_number'])
         fname.close()
 
     def write_mmi(self):
