@@ -116,6 +116,9 @@ def main():
         am.read_mi()
         am.mi_number += 1
         sample_list = (am.get_sample_urls())
+        sample_set=list(set(sample_list))
+        sample_set.sort()
+        
         am.add_record(sample_list)
         am.write_mmi()
 
