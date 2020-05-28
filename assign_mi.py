@@ -83,7 +83,8 @@ class assignMI(RecordWriter):
 
     def write_mmi(self):
         fname = open(self.mi_file_path, 'w')
-        ydict = {'mi_number': self.mi_number}
+        padded = str(self.mi_number).zfill(5)
+        ydict = {'mi_number': padded}
         ydump = yaml.dump(ydict, fname)
         fname.close()
 
@@ -110,6 +111,7 @@ def main():
     with lock:
         am = assignMI(process_id=args.process_id,
                       environment=args.environment,
+                      config_file=args.config_file,
                       mi_file_path=args.mi_file)
         am.read_mi()
         am.mi_number += 1
