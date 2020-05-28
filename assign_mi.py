@@ -37,20 +37,21 @@ class assignMI(RecordWriter):
         self.mi_number = None
    
     def process_xml(self, response):
+        padded = str(self.mi_number).zfill(5)
         root = ET.fromstring(response.content)  
         udf = '{http://genologics.com/ri/userdefined}field'
         found = False
         for x in root.findall(udf):
             if x.attrib['name'] == "Customer Sample Name":
                 x.attrib['type'] = 'String'
-                x.text = "MI20-{}".format(self.mi_number)
+                x.text = "MI20-{}".format(padded)
                 found = True
                 break
         if not found:
             x = ET.Element(udf)
             x.attrib['name'] = "Customer Sample Name"
             x.attrib['type'] = 'String'
-            x.text = "MI20-{}".format(self.mi_number)
+            x.text = "MI20-{}".format(padded)
             root.append(x)
         self.mi_number += 1
         return root
@@ -83,8 +84,7 @@ class assignMI(RecordWriter):
 
     def write_mmi(self):
         fname = open(self.mi_file_path, 'w')
-        padded = str(self.mi_number).zfill(5)
-        ydict = {'mi_number': padded}
+        ydict = {'mi_number': self.mi_number}
         ydump = yaml.dump(ydict, fname)
         fname.close()
 
