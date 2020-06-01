@@ -40,20 +40,25 @@ class assignMI(RecordWriter):
         padded = str(self.mi_number).zfill(5)
         root = ET.fromstring(response.content)  
         udf = '{http://genologics.com/ri/userdefined}field'
-        found = False
+        #found = False
+        controls = ['NTC_EXT', 'HighPos']
+        control = False
         for x in root.findall(udf):
-            if x.attrib['name'] == "Customer Sample Name":
-                x.attrib['type'] = 'String'
-                x.text = "MI20-{}".format(padded)
-                found = True
+            if x.attrib['name'] == "Customer Sample Name" and x.text  in controls:
+                #x.attrib['type'] = 'String'
+                #x.text = "MI20-{}".format(padded)
+                #found = True
+                control = True
                 break
-        if not found:
+        if not control:
             x = ET.Element(udf)
             x.attrib['name'] = "Customer Sample Name"
             x.attrib['type'] = 'String'
             x.text = "MI20-{}".format(padded)
             root.append(x)
-        self.mi_number += 1
+            control = False
+        if control == False:
+            self.mi_number += 1
         return root
 
     def add_record(self, sample_list):
@@ -114,7 +119,7 @@ def main():
                       config_file=args.config_file,
                       mi_file_path=args.mi_file)
         am.read_mi()
-        am.mi_number += 1
+        #am.mi_number += 1
         sample_list = (am.get_sample_urls())
         sample_set=list(set(sample_list))
         sample_set.sort()
